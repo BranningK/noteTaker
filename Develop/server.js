@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
 const notes = require('./db/notes');
+const fs = require('fs');
 
 const app = express();
 const PORT = 3001;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // Get route for the Homepage
@@ -21,7 +24,7 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
     // Log that a POST request was received
     console.info(`${req.method} request received to add a note`);
-  
+    console.log("Req Body: ", req.body);
     // Destructuring assignment for the items in req.body
     const { title, text } = req.body;
   
@@ -32,6 +35,29 @@ app.post('/api/notes', (req, res) => {
         title,
         text,
       };
+  
+      let savedArr= [];
+      // we have to grab the CURRENT data
+      fs.readFileSync('./db/notes.json', 'utf8', (err, data) => {
+        if(err) throw err;
+        console.log("Saved Data: ", data);
+        console.log("Saved Type: ", typeof data);
+        const savedData = data;
+        
+        // add our new data
+        savedArr = JSON.parse(savedData);
+        console.log("Array Data: ", savedArr);
+        console.log("Array Type: ", typeof savedArr);
+        savedArr.push(newNote);
+
+        // then save the new and old data
+      })
+
+      // Save the new data into our DB file (dataset)
+      fs.writeFileSync('./db/notes.json', JSON.stringify(savedArr), (err) => {
+        if(err) throw err;
+        console.log("Saved successfully...");
+      })
   
       const response = {
         status: 'success',
