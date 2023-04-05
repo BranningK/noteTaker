@@ -18,7 +18,10 @@ app.get('/notes', (req, res) =>
 );
 
 app.get('/api/notes', (req, res) => {
-    res.status(200).json(notes);
+    // res.status(200).json(notes);
+    // console.log("Notes: ", notes);
+    res.status(200).json(JSON.parse(fs.readFileSync('./db/notes.json')));
+    console.log(JSON.parse(fs.readFileSync('./db/notes.json')));
 });
 
 app.post('/api/notes', (req, res) => {
