@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const notes = require('./db/notes');
 const fs = require('fs');
+const uuid = require('./public/assets/helpers/uuid');
 
 const app = express();
 const PORT = 3001;
@@ -18,10 +19,7 @@ app.get('/notes', (req, res) =>
 );
 
 app.get('/api/notes', (req, res) => {
-    // res.status(200).json(notes);
-    // console.log("Notes: ", notes);
     res.status(200).json(JSON.parse(fs.readFileSync('./db/notes.json')));
-    console.log(JSON.parse(fs.readFileSync('./db/notes.json')));
 });
 
 app.post('/api/notes', (req, res) => {
@@ -37,6 +35,7 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
+            id: uuid(),
         }
         console.log('here is newNote: ', newNote)
         
