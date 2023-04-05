@@ -27,47 +27,43 @@ app.post('/api/notes', (req, res) => {
     console.log("Req Body: ", req.body);
     // Destructuring assignment for the items in req.body
     const { title, text } = req.body;
-  
+    
     // If all the required properties are present
     if (title && text ) {
       // Variable for the object we will save
-      const newNote = {
-        title,
-        text,
-      };
-  
-      let savedArr= [];
-      // we have to grab the CURRENT data
-      fs.readFileSync('./db/notes.json', 'utf8', (err, data) => {
-        if(err) throw err;
-        console.log("Saved Data: ", data);
-        console.log("Saved Type: ", typeof data);
-        const savedData = data;
+        const newNote = {
+            title,
+            text,
+        }
+        console.log('here is newNote: ', newNote)
         
+        let savedArr
+        
+        // we have to grab the CURRENT data
+        const data = fs.readFileSync('./db/notes.json');
+        // data is being assigned to the readfile result 
         // add our new data
-        savedArr = JSON.parse(savedData);
+        savedArr = JSON.parse(data);
         console.log("Array Data: ", savedArr);
         console.log("Array Type: ", typeof savedArr);
         savedArr.push(newNote);
-
+        console.log("here is savedArr: ", savedArr);
         // then save the new and old data
-      })
-
-      // Save the new data into our DB file (dataset)
-      fs.writeFileSync('./db/notes.json', JSON.stringify(savedArr), (err) => {
-        if(err) throw err;
+        // Save the new data into our DB file (dataset)
+        console.log("------------------------")
+        fs.writeFileSync('./db/notes.json', JSON.stringify(savedArr));
+        console.log('savedArr: ', savedArr)
         console.log("Saved successfully...");
-      })
-  
-      const response = {
-        status: 'success',
-        body: newNote,
-      };
-  
-      console.log(response);
-      res.status(201).json(response);
+
+        const response = {
+            status: 'success',
+            body: newNote,
+        };
+
+        res.status(201).json(response);
+        console.log("Response: ", response)
     } else {
-      res.status(500).json('Error in posting review');
+      res.status(500).json('Error in posting note');
     }
   });
 

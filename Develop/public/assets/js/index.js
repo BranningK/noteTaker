@@ -28,7 +28,7 @@ let activeNote = {
 //  text: noteText.value
 };
 
-const getNotes = () =>
+const getNotes = (notes) =>
   fetch('/api/notes', {
     method: 'GET',
     headers: {
@@ -37,8 +37,6 @@ const getNotes = () =>
   });
 
 const saveNote = (newNote) =>
-  //console.log("New Note: ", newNote);
-
   fetch('/api/notes', {
     method: 'POST',
     headers: {
@@ -123,13 +121,15 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
+  console.log('here is notes: ', notes);
   let jsonNotes = await notes.json();
+  console.log('here is jsonNotes: ', jsonNotes);
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
 
   let noteListItems = [];
-
+  console.log('here is noteListItems: ', noteListItems)
   // Returns HTML element with or without a delete button
   const createLi = (text, delBtn = true) => {
     const liEl = document.createElement('li');
@@ -166,12 +166,16 @@ const renderNoteList = async (notes) => {
   jsonNotes.forEach((note) => {
     const li = createLi(note.title);
     li.dataset.note = JSON.stringify(note);
-
+    console.log("li.dataset.note: ", li.dataset.note)
+    console.log("here is li: ", li)
     noteListItems.push(li);
+    console.log("here is noteListItems: ", noteListItems)
   });
-
+      console.log(window.location.pathname)
   if (window.location.pathname === '/notes') {
-    noteListItems.forEach((note) => noteList[0].append(note));
+    noteListItems.forEach((note) => {
+      noteList[0].append(note)
+    });
   }
 };
 
