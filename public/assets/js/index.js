@@ -24,8 +24,7 @@ const hide = (elem) => {
 
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {
-//  title: noteTitle.value,
-//  text: noteText.value
+
 };
 
 const getNotes = (notes) =>
@@ -45,8 +44,8 @@ const saveNote = (newNote) =>
     body: JSON.stringify(newNote),
   });
 
-const deleteNote = (id) =>
-  fetch(`/api/notes/${id}`, {
+const deleteNote = (noteId) =>
+  fetch(`/api/notes/${noteId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -87,7 +86,6 @@ const handleNoteDelete = (e) => {
 
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
-
   if (activeNote.id === noteId) {
     activeNote = {};
   }
@@ -121,15 +119,12 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-  console.log('here is notes: ', notes);
   let jsonNotes = await notes.json();
-  console.log('here is jsonNotes: ', jsonNotes);
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
 
   let noteListItems = [];
-  console.log('here is noteListItems: ', noteListItems)
   // Returns HTML element with or without a delete button
   const createLi = (text, delBtn = true) => {
     const liEl = document.createElement('li');
@@ -166,12 +161,8 @@ const renderNoteList = async (notes) => {
   jsonNotes.forEach((note) => {
     const li = createLi(note.title);
     li.dataset.note = JSON.stringify(note);
-    console.log("li.dataset.note: ", li.dataset.note)
-    console.log("here is li: ", li)
     noteListItems.push(li);
-    console.log("here is noteListItems: ", noteListItems)
   });
-      console.log(window.location.pathname)
   if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => {
       noteList[0].append(note)
