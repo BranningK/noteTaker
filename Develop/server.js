@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const notes = require('./db/notes');
 const fs = require('fs');
-const uuid = require('./assets/helpers/uuid');
+const uuid = require('../assets/helpers/uuid');
 const environment = process.env.NODE_ENV || 'development';
 const app = express();
 const PORT = 3001;
@@ -68,27 +68,6 @@ app.post('/api/notes', (req, res) => {
       res.status(500).json('Error in posting note');
     }
   });
-
-app.delete(`/api/notes/:noteId`, (req, res) => {
-  console.info(`${req.method} request received to delete a note`);
-  
-  const noteId = req.params.noteId;
-  const data = fs.readFileSync('./db/notes.json');
-  const notes = JSON.parse(data);
-  const index = notes.findIndex(note => note.id === noteId);
-
-  if (index !== -1) {
-    notes.splice(index, 1);
-
-    // Write the updated notes data back to the file
-    fs.writeFileSync('./db/notes.json', JSON.stringify(notes));
-
-    res.status(200).json({ success: true });
-  } else {
-    res.status(404).json({ error: `Note with ID ${noteId} not found` });
-  }
-
-});
 
 app.listen(PORT, () =>
   console.log(`Example app listening at http://localhost:${PORT}`)
