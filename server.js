@@ -3,7 +3,7 @@ const path = require('path');
 const notes = require('./db/notes');
 const fs = require('fs');
 const uuid = require('./assets/helpers/uuid');
-
+const environment = process.env.NODE_ENV || 'development';
 const app = express();
 const PORT = 3001;
 
